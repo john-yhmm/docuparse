@@ -36,4 +36,4 @@ Upload any invoice or receipt. AI pulls out everything you need in seconds. No m
 
 ## Built With
 
-React · Node.js · Express · PostgreSQL · Claude AI API
+React · Node.js · Express · PostgreSQL · Gemini AI API
