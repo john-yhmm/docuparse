@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-if (!process.env.GEMINI_API_KEY) {
-  console.error("Error: GEMINI_API_KEY is not set in .env");
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error("Error: ANTHROPIC_API_KEY is not set in .env");
   process.exit(1);
 }
 

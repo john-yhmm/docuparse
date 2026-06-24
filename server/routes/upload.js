@@ -1,11 +1,11 @@
 const express = require("express");
 const multer = require("multer");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Anthropic = require("@anthropic-ai/sdk");
+const { saveInvoice } = require("../models/invoice");
 
 const router = express.Router();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
@@ -44,23 +44,31 @@ router.post("/upload", upload.single("invoice"), async (req, res) => {
   }
 
   const base64 = req.file.buffer.toString("base64");
+  const ispdf = req.file.mimetype === "application/pdf";
 
-  const result = await model.generateContent([
-    INVOICE_PROMPT,
-    { inlineData: { data: base64, mimeType: req.file.mimetype } },
-  ]);
+  const fileContent = ispdf
+    ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64 } }
+    : { type: "image", source: { type: "base64", media_type: req.file.mimetype, data: base64 } };
 
-  const text = result.response.text();
+  const response = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    system: [{ type: "text", text: INVOICE_PROMPT, cache_control: { type: "ephemeral" } }],
+    messages: [{ role: "user", content: [fileContent] }],
+  });
+
+  const text = response.content[0].text;
   const cleaned = text.replace(/```json\n?|\n?```/g, "").trim();
 
   let invoice;
   try {
     invoice = JSON.parse(cleaned);
   } catch {
-    return res.status(502).json({ error: "Failed to parse Gemini response", raw: cleaned });
+    return res.status(502).json({ error: "Failed to parse Claude response", raw: cleaned });
   }
 
-  res.json({ success: true, data: invoice });
+  const saved = await saveInvoice(invoice);
+  res.json({ success: true, data: saved });
 });
 
 module.exports = router;
