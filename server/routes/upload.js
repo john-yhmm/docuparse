@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const Anthropic = require("@anthropic-ai/sdk");
 const { saveInvoice } = require("../models/invoice");
+const requireAuth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ const INVOICE_PROMPT = `Extract all invoice data from this document and return i
 }
 Return ONLY the JSON object with no additional text or markdown formatting.`;
 
-router.post("/upload", upload.single("invoice"), async (req, res) => {
+router.post("/upload", requireAuth, upload.single("invoice"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
