@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
+import apiClient from '../api/client'
 
 interface AuthContextType {
   token: string | null
@@ -8,7 +9,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setTokenState] = useState<string | null>(null)
+
+  function setToken(t: string | null) {
+    setTokenState(t)
+    if (t) {
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${t}`
+    } else {
+      delete apiClient.defaults.headers.common['Authorization']
+    }
+  }
 
   return (
     <AuthContext.Provider value={{ token, setToken }}>
