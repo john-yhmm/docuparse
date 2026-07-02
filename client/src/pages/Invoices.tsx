@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import apiClient from '../api/client'
 import NavBar from '../components/NavBar'
 
@@ -106,7 +106,7 @@ export default function Invoices() {
     }
   }
 
-  function handleApply(e: React.FormEvent) {
+  function handleApply(e: FormEvent) {
     e.preventDefault()
     setApplied({ ...filters })
   }
