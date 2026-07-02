@@ -84,7 +84,7 @@ export default function Dashboard() {
         {data && (
           <div className="space-y-8">
             {/* Stats cards */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Total Spend</p>
                 <p className="text-3xl font-bold text-gray-900">{formatCurrency(data.total_spend)}</p>

@@ -83,7 +83,7 @@ export default function Upload() {
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
-          className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors
+          className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer transition-colors
             ${dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-gray-50'}`}
         >
           <input

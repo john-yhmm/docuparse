@@ -206,20 +206,20 @@ export default function Invoices() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Invoice #</th>
+                    <th className="hidden sm:table-cell text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Invoice #</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Vendor</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Due</th>
+                    <th className="hidden sm:table-cell text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Due</th>
                     <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 text-gray-600">{inv.invoice_number || '—'}</td>
+                      <td className="hidden sm:table-cell px-4 py-3 text-gray-600">{inv.invoice_number || '—'}</td>
                       <td className="px-4 py-3 font-medium text-gray-800">{inv.vendor_name || '—'}</td>
                       <td className="px-4 py-3 text-gray-600">{formatDate(inv.invoice_date)}</td>
-                      <td className="px-4 py-3 text-gray-600">{formatDate(inv.due_date)}</td>
+                      <td className="hidden sm:table-cell px-4 py-3 text-gray-600">{formatDate(inv.due_date)}</td>
                       <td className="px-4 py-3 text-right font-semibold text-gray-900">
                         {formatCurrency(inv.total, inv.currency)}
                       </td>
