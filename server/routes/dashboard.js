@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/dashboard", requireAuth, async (req, res, next) => {
   try {
     const [totalResult, vendorsResult, monthlyResult] = await Promise.all([
-      pool.query("SELECT COALESCE(SUM(total), 0) AS total_spend FROM invoices"),
+      pool.query("SELECT COALESCE(SUM(total), 0) AS total_spend, COUNT(*) AS invoice_count FROM invoices"),
       pool.query(`
         SELECT vendor_name, COALESCE(SUM(total), 0) AS total
         FROM invoices
@@ -27,6 +27,7 @@ router.get("/dashboard", requireAuth, async (req, res, next) => {
 
     res.json({
       total_spend: Number(totalResult.rows[0].total_spend),
+      invoice_count: Number(totalResult.rows[0].invoice_count),
       top_vendors: vendorsResult.rows.map((r) => ({
         vendor_name: r.vendor_name,
         total: Number(r.total),
