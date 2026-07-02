@@ -68,7 +68,7 @@ router.post("/upload", requireAuth, upload.single("invoice"), async (req, res) =
     return res.status(502).json({ error: "Failed to parse Claude response", raw: cleaned });
   }
 
-  const saved = await saveInvoice(invoice);
+  const saved = await saveInvoice(invoice, req.user.userId);
   res.json({ success: true, data: saved });
 });
 

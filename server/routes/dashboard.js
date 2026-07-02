@@ -6,23 +6,30 @@ const router = express.Router();
 
 router.get("/dashboard", requireAuth, async (req, res, next) => {
   try {
+    const userId = req.user.userId;
     const [totalResult, vendorsResult, monthlyResult] = await Promise.all([
-      pool.query("SELECT COALESCE(SUM(total), 0) AS total_spend, COUNT(*) AS invoice_count FROM invoices"),
-      pool.query(`
-        SELECT vendor_name, COALESCE(SUM(total), 0) AS total
-        FROM invoices
-        WHERE vendor_name IS NOT NULL AND vendor_name <> ''
-        GROUP BY vendor_name
-        ORDER BY total DESC
-        LIMIT 5
-      `),
-      pool.query(`
-        SELECT TO_CHAR(DATE_TRUNC('month', created_at), 'YYYY-MM') AS month,
-               COALESCE(SUM(total), 0) AS total
-        FROM invoices
-        GROUP BY DATE_TRUNC('month', created_at)
-        ORDER BY DATE_TRUNC('month', created_at)
-      `),
+      pool.query(
+        "SELECT COALESCE(SUM(total), 0) AS total_spend, COUNT(*) AS invoice_count FROM invoices WHERE user_id = $1",
+        [userId]
+      ),
+      pool.query(
+        `SELECT vendor_name, COALESCE(SUM(total), 0) AS total
+         FROM invoices
+         WHERE user_id = $1 AND vendor_name IS NOT NULL AND vendor_name <> ''
+         GROUP BY vendor_name
+         ORDER BY total DESC
+         LIMIT 5`,
+        [userId]
+      ),
+      pool.query(
+        `SELECT TO_CHAR(DATE_TRUNC('month', created_at), 'YYYY-MM') AS month,
+                COALESCE(SUM(total), 0) AS total
+         FROM invoices
+         WHERE user_id = $1
+         GROUP BY DATE_TRUNC('month', created_at)
+         ORDER BY DATE_TRUNC('month', created_at)`,
+        [userId]
+      ),
     ]);
 
     res.json({

@@ -4,10 +4,10 @@ const requireAuth = require("../middleware/auth");
 
 const router = express.Router();
 
-function buildWhereClause(query) {
+function buildWhereClause(userId, query) {
   const { vendor, date_from, date_to, amount_min, amount_max } = query;
-  const conditions = [];
-  const params = [];
+  const params = [userId];
+  const conditions = ["user_id = $1"];
 
   if (vendor) {
     params.push(`%${vendor}%`);
@@ -30,7 +30,7 @@ function buildWhereClause(query) {
     conditions.push(`total <= $${params.length}`);
   }
 
-  return { where: conditions.length ? `WHERE ${conditions.join(" AND ")}` : "", params };
+  return { where: `WHERE ${conditions.join(" AND ")}`, params };
 }
 
 const INVOICE_SELECT = `
@@ -56,7 +56,7 @@ const CSV_HEADERS = [
 
 router.get("/invoices/export", requireAuth, async (req, res, next) => {
   try {
-    const { where, params } = buildWhereClause(req.query);
+    const { where, params } = buildWhereClause(req.user.userId, req.query);
     const { rows } = await pool.query(`${INVOICE_SELECT} ${where} ORDER BY created_at DESC`, params);
 
     const lines = [CSV_HEADERS.join(",")];
@@ -74,7 +74,7 @@ router.get("/invoices/export", requireAuth, async (req, res, next) => {
 
 router.get("/invoices", requireAuth, async (req, res, next) => {
   try {
-    const { where, params } = buildWhereClause(req.query);
+    const { where, params } = buildWhereClause(req.user.userId, req.query);
     const { rows } = await pool.query(`${INVOICE_SELECT} ${where} ORDER BY created_at DESC`, params);
     res.json(rows.map((r) => ({ ...r, total: Number(r.total) })));
   } catch (err) {

@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS invoices (
   id               SERIAL PRIMARY KEY,
+  user_id          INTEGER REFERENCES users(id) ON DELETE CASCADE,
   invoice_number   TEXT,
   invoice_date     TEXT,
   due_date         TEXT,

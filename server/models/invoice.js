@@ -1,19 +1,21 @@
 const pool = require("../db/pool");
 
-async function saveInvoice(data) {
+async function saveInvoice(data, userId) {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
 
     const { rows } = await client.query(
       `INSERT INTO invoices
-        (invoice_number, invoice_date, due_date,
+        (user_id,
+         invoice_number, invoice_date, due_date,
          vendor_name, vendor_address, vendor_email, vendor_phone,
          customer_name, customer_address, customer_email, customer_phone,
          subtotal, tax, discount, total, currency, notes)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
        RETURNING *`,
       [
+        userId,
         data.invoice_number,
         data.invoice_date,
         data.due_date,
