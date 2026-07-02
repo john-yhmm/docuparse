@@ -9,6 +9,8 @@ const express = require("express");
 const cors = require("cors");
 const uploadRouter = require("./routes/upload");
 const authRouter = require("./routes/auth");
+const dashboardRouter = require("./routes/dashboard");
+const invoicesRouter = require("./routes/invoices");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api", uploadRouter);
+app.use("/api", dashboardRouter);
+app.use("/api", invoicesRouter);
 
 app.use((err, req, res, next) => {
   const status = err.status || err.statusCode || 500;
