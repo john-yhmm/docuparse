@@ -18,7 +18,7 @@ export default function Login() {
     try {
       const { data } = await apiClient.post('/api/auth/login', { email, password })
       setToken(data.token)
-      navigate('/upload')
+      navigate('/dashboard')
     } catch (err: unknown) {
       const msg =
         err instanceof Error && 'response' in err

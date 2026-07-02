@@ -4,6 +4,7 @@ import Register from './pages/Register'
 import Upload from './pages/Upload'
 import Results from './pages/Results'
 import Dashboard from './pages/Dashboard'
+import Invoices from './pages/Invoices'
 import ProtectedRoute from './components/ProtectedRoute'
 
 export default function App() {
@@ -16,6 +17,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/invoices"
+        element={
+          <ProtectedRoute>
+            <Invoices />
           </ProtectedRoute>
         }
       />

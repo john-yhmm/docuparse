@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
 import apiClient from '../api/client'
+import NavBar from '../components/NavBar'
 
 interface DashboardData {
   total_spend: number
@@ -57,8 +56,6 @@ function BarChart({ data }: { data: { month: string; total: number }[] }) {
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [error, setError] = useState('')
-  const { setToken } = useAuth()
-  const navigate = useNavigate()
 
   useEffect(() => {
     apiClient
@@ -67,36 +64,9 @@ export default function Dashboard() {
       .catch(() => setError('Failed to load dashboard data.'))
   }, [])
 
-  function handleLogout() {
-    setToken(null)
-    navigate('/login')
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-gray-800">DocuParse</h1>
-        <div className="flex items-center gap-6">
-          <button
-            onClick={() => navigate('/upload')}
-            className="text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
-          >
-            Upload
-          </button>
-          <button
-            onClick={() => navigate('/invoices')}
-            className="text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
-          >
-            Invoices
-          </button>
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
-          >
-            Sign out
-          </button>
-        </div>
-      </header>
+      <NavBar />
 
       <main className="max-w-4xl mx-auto px-4 py-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Dashboard</h2>

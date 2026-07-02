@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import NavBar from '../components/NavBar'
 
 interface LineItem {
   id?: number
@@ -114,15 +115,7 @@ export default function Results() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-gray-800">DocuParse</h1>
-        <button
-          onClick={() => navigate('/upload')}
-          className="text-sm text-blue-600 hover:underline cursor-pointer"
-        >
-          ← Upload another
-        </button>
-      </header>
+      <NavBar />
 
       <main className="max-w-4xl mx-auto px-4 py-10 space-y-8">
         <div>
